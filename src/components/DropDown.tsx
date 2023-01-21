@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, createRef } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import '../assets/styles/dropdown.scss';
 import Rus from '../assets/img/rus.svg';
 import Eng from '../assets/img/eng.svg';
@@ -54,7 +54,6 @@ export function DropDown() {
     const [searchedArray, setSearchedArray] = useState([]);
     const [isMultiselect, setIsMultiselect] = useState(true);
     const [isIcon, setIsIcon] = useState(true);
-    const checkboxRef = createRef();
     const [search, setSearch] = useState('');
     interface IItem {
         name: string,
@@ -104,7 +103,6 @@ export function DropDown() {
     };
 
     const renderedArray = (): IItem[] => {
-        console.log(searchedArray.length ? searchedArray : languageArray);
         return searchedArray.length ? searchedArray : languageArray;
     }
 
@@ -168,7 +166,11 @@ export function DropDown() {
                     </div>)}
             </div>
             <div>
-                <input type="text" value={search} onChange={handleSearchChange} />
+                <input
+                    type="text"
+                    value={search}
+                    onChange={handleSearchChange}
+                />
             </div>
             <div>
                 {renderedArray().map((item) =>
@@ -181,6 +183,7 @@ export function DropDown() {
                             onChange={handleInputCheckChange}
                             disabled={item.disabled}
                             defaultChecked={item.checked}
+                            checked={item.checked}
                         />
                     </div>)
                 }
