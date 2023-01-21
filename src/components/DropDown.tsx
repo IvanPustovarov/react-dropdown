@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, createRef } from "react";
 import '../assets/styles/dropdown.scss';
 import Rus from '../assets/img/rus.svg';
 import Eng from '../assets/img/eng.svg';
@@ -6,26 +6,10 @@ import Esp from '../assets/img/esp.svg';
 import Gem from '../assets/img/gem.svg';
 import Italy from '../assets/img/italy.svg';
 import Pol from '../assets/img/pol.svg';
+import Close from '../assets/img/close.svg'
 
 export function DropDown() {
-    interface IItem {
-        name: string,
-        url: JSX.Element,
-        checked: boolean,
-        disabled: boolean
-    }
-    const handleInputCheckChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const target = event.target;
-        const item = languageArray?.find((item) => item.name === target.name);
-        item.checked = !item.checked;
-        setLanguage(languageArray);
-        memoizedFilteredArray();
-    }
-    const handleInputOptionsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const target = event.target;
-        if (target.id === 'multi') setIsMultiselect(target.checked);
-        if (target.id === 'icon') setIsIcon(target.checked);
-    }
+
     const languages: IItem[] = [
         {
             name: 'Русский',
@@ -70,7 +54,42 @@ export function DropDown() {
     const [searchedArray, setSearchedArray] = useState([]);
     const [isMultiselect, setIsMultiselect] = useState(true);
     const [isIcon, setIsIcon] = useState(true);
+    const checkboxRef = createRef();
     const [search, setSearch] = useState('');
+    interface IItem {
+        name: string,
+        url: JSX.Element,
+        checked: boolean,
+        disabled: boolean
+    };
+
+    const handleInputCheckChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const target = event.target;
+        console.log(target);
+        const item = languageArray?.find((item) => item.name === target.name);
+        item.checked = !item.checked;
+        setLanguage(languageArray);
+        memoizedFilteredArray();
+    };
+
+    const handleClose = (elem: IItem) => {
+        const item = languageArray?.find((item) => item.name === elem.name);
+        item.checked = !item.checked;
+
+        const reslutFiltered = filteredArray.filter(arrayItem => arrayItem !== elem);
+        setFilteredArray(reslutFiltered);
+        setLanguage(languageArray);
+    }
+
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearch(event.target.value);
+    };
+
+    const handleInputOptionsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const target = event.target;
+        if (target.id === 'multi') setIsMultiselect(target.checked);
+        if (target.id === 'icon') setIsIcon(target.checked);
+    };
 
     const memoizedFilteredArray = useCallback(
         () => {
@@ -84,11 +103,8 @@ export function DropDown() {
         return isMultiselect && filteredArray.length > 1;
     };
 
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearch(event.target.value);
-    };
-
     const renderedArray = (): IItem[] => {
+        console.log(searchedArray.length ? searchedArray : languageArray);
         return searchedArray.length ? searchedArray : languageArray;
     }
 
@@ -148,6 +164,7 @@ export function DropDown() {
                 {filteredArray?.map((item) =>
                     <div key={item.name}>
                         {item.name}
+                        <Close onClick={() => handleClose(item)} />
                     </div>)}
             </div>
             <div>
