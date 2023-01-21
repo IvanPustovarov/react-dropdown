@@ -8,5 +8,6 @@
     "allowJs": true,
     "esModuleInterop": true,
     "moduleResolution": "node"
-  }
+  },
+  "include": ["src/components", "src/custom.d.ts"],
 }
