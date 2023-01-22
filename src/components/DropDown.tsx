@@ -6,7 +6,9 @@ import Esp from '../assets/img/esp.svg';
 import Gem from '../assets/img/gem.svg';
 import Italy from '../assets/img/italy.svg';
 import Pol from '../assets/img/pol.svg';
-import Close from '../assets/img/close.svg'
+import Close from '../assets/img/close.svg';
+import Show from '../assets/img/show.svg';
+import Hide from '../assets/img/hide.svg';
 
 export function DropDown() {
 
@@ -54,6 +56,7 @@ export function DropDown() {
     const [searchedArray, setSearchedArray] = useState([]);
     const [isMultiselect, setIsMultiselect] = useState(true);
     const [isIcon, setIsIcon] = useState(true);
+    const [isShow, setIsShow] = useState(true);
     const [search, setSearch] = useState('');
     interface IItem {
         name: string,
@@ -64,12 +67,16 @@ export function DropDown() {
 
     const handleInputCheckChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const target = event.target;
-        console.log(target);
         const item = languageArray?.find((item) => item.name === target.name);
         item.checked = !item.checked;
         setLanguage(languageArray);
         memoizedFilteredArray();
     };
+
+    const handleShowList = () => {
+        console.log(isShow);
+        setIsShow(!isShow);
+    }
 
     const handleClose = (elem: IItem) => {
         const item = languageArray?.find((item) => item.name === elem.name);
@@ -137,54 +144,75 @@ export function DropDown() {
     }, [search]);
 
     return (
-        <div>
-            <div>
-                Мульти-селект
-                <input
-                    type="checkbox"
-                    name="multi"
-                    id="multi"
-                    onChange={handleInputOptionsChange}
-                    checked={isMultiselect}
-                    disabled={isMultiselectUI()}
-                />
-                Иконка
-                <input
-                    type="checkbox"
-                    name="icon"
-                    id="icon"
-                    onChange={handleInputOptionsChange}
-                    checked={isIcon}
-                />
+        <div className="dropdown-container">
+            <div className="dropdown-options">
+                <div className="option">
+                    Мульти-селект
+                    <input
+                        type="checkbox"
+                        name="multi"
+                        id="multi"
+                        onChange={handleInputOptionsChange}
+                        checked={isMultiselect}
+                        disabled={isMultiselectUI()}
+                    />
+                    <label htmlFor="multi"></label>
+                </div>
+                <div className="option">
+                    Иконка
+                    <input
+                        type="checkbox"
+                        name="icon"
+                        id="icon"
+                        onChange={handleInputOptionsChange}
+                        checked={isIcon}
+                    />
+                    <label htmlFor="icon"></label>
+                </div>
             </div>
-            <div>Язык</div>
-            <div>
-                {filteredArray?.map((item) =>
-                    <div key={item.name}>
-                        {item.name}
-                        <Close onClick={() => handleClose(item)} />
-                    </div>)}
+            <div className="filtered-list-container">
+                Язык
+                <div className="filtered-container">
+                    <div className="filtered-item-container">
+                        {
+                            filteredArray?.map((item) =>
+                                <div key={item.name} className="item-language">
+                                    <span className="item-name">
+                                        {item.name}
+                                    </span>
+                                    <div className="item-close">
+                                        <Close onClick={() => handleClose(item)} />
+                                    </div>
+                                </div>)
+                        }
+                    </div>
+                    <div className="item-filtered-show" onClick={handleShowList}>
+                        {isShow ? <Show /> : <Hide />}
+                    </div>
+                </div>
             </div>
-            <div>
+            <div className="languages-list-container" style={{ display: isShow ? 'flex' : 'none' }}>
                 <input
                     type="text"
                     value={search}
                     onChange={handleSearchChange}
+                    className="input-search"
+                    placeholder="Поиск"
                 />
-            </div>
-            <div>
                 {renderedArray().map((item) =>
-                    <div key={item.name}>
+                    <div key={item.name} className="language-item-container">
                         {isIcon ? item.url : ''} {item.name}
-                        <input
-                            type="checkbox"
-                            name={item.name}
-                            id={item.name}
-                            onChange={handleInputCheckChange}
-                            disabled={item.disabled}
-                            defaultChecked={item.checked}
-                            checked={item.checked}
-                        />
+                        <div className="checkbox-item">
+                            <input
+                                type="checkbox"
+                                name={item.name}
+                                id={item.name}
+                                onChange={handleInputCheckChange}
+                                disabled={item.disabled}
+                                checked={item.checked}
+                            />
+                            <label htmlFor={item.name}></label>
+                        </div>
                     </div>)
                 }
             </div>

@@ -1,0 +1,45 @@
+.app-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3rem;
+}
+
+body{
+    font-size: 18px;
+}
+
+*{
+    padding: 0;
+    margin: 0;
+    transition: all 0.3s ease-out;
+}
+
+input[type="checkbox"] {
+    display:none;
+}
+
+input[type='checkbox'] + label {
+    cursor: pointer;
+    display:inline-block;
+    width:23px;
+    height:23px;
+    border-radius: 3px;
+    outline: 1px solid #0049D9;
+    background-color: rgb(255, 255, 255);
+}
+
+input[type="checkbox"]:checked + label {
+    background: url('../img/check.svg') no-repeat center;
+    background-color: #005FFD;
+}
+
+input[type="checkbox"]:disabled + label {
+    background-color: #F4F4F4;
+}
+
+
+input[type="checkbox"]:disabled:checked + label {
+    background: url('../img/check-disabled.svg') no-repeat center;
+    background-color: #F4F4F4;
+}
